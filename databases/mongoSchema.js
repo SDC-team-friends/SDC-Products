@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
-const productSchema = mongoose.Schema({
+const productSchema = new Schema({
   product_id: Number,
   name: String,
   slogan: String,
