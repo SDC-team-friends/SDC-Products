@@ -17,9 +17,9 @@ CREATE TABLE products (
 
 CREATE TABLE features (
   id SERIAL PRIMARY KEY,
+  product_id INT NOT NULL,
   feature VARCHAR(100) NOT NULL,
   value VARCHAR(255) NOT NULL,
-  product_id INT NOT NULL,
   CONSTRAINT fk_product_feature
     FOREIGN KEY(product_id)
       REFERENCES products(id)
@@ -27,11 +27,11 @@ CREATE TABLE features (
 
 CREATE TABLE styles (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  original_price VARCHAR(50) NOT NULL,
-  sale_price VARCHAR(50) NOT NULL,
-  default_style BOOLEAN NOT NULL,
   product_id INT NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  sale_price VARCHAR(50) NOT NULL,
+  original_price VARCHAR(50) NOT NULL,
+  default_style BOOLEAN NOT NULL,
   CONSTRAINT fk_product_style
     FOREIGN KEY(product_id)
       REFERENCES products(id)
@@ -39,18 +39,18 @@ CREATE TABLE styles (
 
 CREATE TABLE related (
   id SERIAL PRIMARY KEY,
-  related_id INT NOT NULL,
-  current_id INT NOT NULL,
+  current_product_id INT NOT NULL,
+  related_product_id INT NOT NULL,
   CONSTRAINT fk_product_related
-    FOREIGN KEY(current_id)
+    FOREIGN KEY(current_product_id)
       REFERENCES products(id)
 );
 
 CREATE TABLE photos (
   id SERIAL PRIMARY KEY,
+  style_id INT NOT NULL,
   url TEXT NOT NULL,
   thumbnail_url TEXT NOT NULL,
-  style_id INT NOT NULL,
   CONSTRAINT fk_style_photo
    FOREIGN KEY(style_id)
      REFERENCES styles(id)
@@ -58,10 +58,41 @@ CREATE TABLE photos (
 
 CREATE TABLE skus (
   id SERIAL PRIMARY KEY,
-  quantity INT NOT NULL,
-  size VARCHAR(20) NOT NULL,
   style_id INT NOT NULL,
+  size VARCHAR(20) NOT NULL,
+  quantity INT NOT NULL,
   CONSTRAINT fk_style_sku
     FOREIGN KEY(style_id)
       REFERENCES styles(id)
 );
+
+
+COPY products
+  FROM '/Users/jpg/Documents/RFP2205/SDC-Example-Data/product.csv'
+  DELIMITER ','
+  CSV HEADER;
+
+COPY features
+  FROM '/Users/jpg/Documents/RFP2205/SDC-Example-Data/features.csv'
+  DELIMITER ','
+  CSV HEADER;
+
+COPY styles
+  FROM '/Users/jpg/Documents/RFP2205/SDC-Example-Data/styles.csv'
+  DELIMITER ','
+  CSV HEADER;
+
+COPY related
+  FROM '/Users/jpg/Documents/RFP2205/SDC-Example-Data/related.csv'
+  DELIMITER ','
+  CSV HEADER;
+
+COPY photos
+  FROM '/Users/jpg/Documents/RFP2205/SDC-Example-Data/photos.csv'
+  DELIMITER ','
+  CSV HEADER;
+
+COPY skus
+  FROM '/Users/jpg/Documents/RFP2205/SDC-Example-Data/skus.csv'
+  DELIMITER ','
+  CSV HEADER;
