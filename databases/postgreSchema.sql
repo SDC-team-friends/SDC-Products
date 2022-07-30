@@ -97,3 +97,15 @@ COPY skus
   FROM '/Users/jpg/Documents/RFP2205/SDC-Example-Data/skus.csv'
   DELIMITER ','
   CSV HEADER;
+
+CREATE INDEX product_id_index ON products (id);
+CREATE INDEX style_id_idx ON styles (id);
+CREATE INDEX style_fk_id_idx ON styles (product_id);
+CREATE INDEX related_id_idx on related (id);
+CREATE INDEX related_fk_id_idx on related (current_product_id);
+CREATE INDEX feature_id_index ON features (id);
+CREATE INDEX feature_fk_id_index ON features (product_id);
+CREATE INDEX photo_id_idx ON photos (id);
+CREATE INDEX photo_fk_id_idx ON photos (style_id);
+CREATE INDEX sku_id_idx on skus (id);
+CREATE INDEX sku_fk_id_idx ON skus (style_id);
