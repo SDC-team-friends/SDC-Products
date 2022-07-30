@@ -85,7 +85,8 @@ COPY styles
 COPY related
   FROM '/Users/jpg/Documents/RFP2205/SDC-Example-Data/related.csv'
   DELIMITER ','
-  CSV HEADER;
+  CSV HEADER
+  WHERE related_product_id != 0;
 
 COPY photos
   FROM '/Users/jpg/Documents/RFP2205/SDC-Example-Data/photos.csv'
