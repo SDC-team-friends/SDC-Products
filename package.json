@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -18,9 +19,13 @@
   },
   "homepage": "https://github.com/SDC-team-friends/SDC-Products#readme",
   "dependencies": {
+    "axios": "^0.27.2",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "mongoose": "^6.5.0",
     "pg": "^8.7.3"
+  },
+  "devDependencies": {
+    "jest": "^28.1.3"
   }
 }

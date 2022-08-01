@@ -88,6 +88,8 @@ COPY related
   CSV HEADER
   WHERE related_product_id != 0;
 
+DELETE FROM related WHERE ctid NOT IN (SELECT min(ctid) FROM related GROUP BY (current_product_id, related_product_id));
+
 COPY photos
   FROM '/Users/jpg/Documents/RFP2205/SDC-Example-Data/photos.csv'
   DELIMITER ','

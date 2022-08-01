@@ -48,7 +48,7 @@ module.exports = {
   },
 
   getRelatedProducts: async(id) => {
-    const q = `SELECT jsonb_agg(DISTINCT related_product_id) AS "related" FROM related WHERE current_product_id = ${id}`;
+    const q = `SELECT jsonb_agg(related_product_id) AS "related" FROM related WHERE current_product_id = ${id}`;
     try {
       const res = await pool.query(q);
       return res.rows[0].related;
