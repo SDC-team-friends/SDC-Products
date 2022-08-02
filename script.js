@@ -1,18 +1,44 @@
-import http from 'k6/http'; // uses the k6/http API to make a load test request call
-import { sleep, check, group } from 'k6';
-import { Trend, Rate } from 'k6/metrics';
-
-let AllProductsTrend = new Trend('Get all products');
-let ProductsTrend = new Trend('Get products based on page and count');
-let ProductsWithParamsTrend = new Trend('Get ProductsWithParams');
-let ProductInfoTrend = new Trend('Get product info');
-let ProductStylesTrend = new Trend('Get product styles');
-let RelatedProductsTrend = new Trend('Get related products');
+import http from 'k6/http';
+import { sleep, check } from 'k6';
 
 export const options = {
-  stages: [
-    { duration: '30s', target: 1000 },
-  ]
+  scenarios: {
+    reqPerSec_1: {
+      executor: 'constant-arrival-rate',
+      rate: 1,
+      timeUnit: '1s',
+      duration: '10s',
+      preAllocatedVUs: 20, // how large the initial pool of VUs would be
+      maxVUs: 100, // if the preAllocatedVUs are not enough, we can initialize more
+    },
+
+    // reqPerSec_10: {
+    //   executor: 'constant-arrival-rate',
+    //   rate: 10,
+    //   timeUnit: '1s',
+    //   duration: '10s',
+    //   preAllocatedVUs: 20,
+    //   maxVUs: 100,
+    // },
+
+    // reqPerSec_100: {
+    //   executor: 'constant-arrival-rate',
+    //   rate: 100,
+    //   timeUnit: '1s',
+    //   duration: '30s',
+    //   preAllocatedVUs: 20,
+    //   maxVUs: 200,
+    // },
+
+    // reqPerSec_1000: {
+    //   executor: 'constant-arrival-rate',
+    //   rate: 1000,
+    //   timeUnit: '1s',
+    //   duration: '30s',
+    //   preAllocatedVUs: 20,
+    //   maxVUs: 2000,
+    // },
+  },
 
 /*
   For load testing, we ramp up the VU to a good amount and maintain it for a fixed period of time before ramping it down to 0.
@@ -42,78 +68,46 @@ const SLEEP_DURATION = 1
 
 const baseUrl = `http://localhost:3000`;
 
+const randId = Math.floor(Math.random() * (1000011 - 1 + 1)) + 1;
+const randCount = Math.floor(Math.random() * (120 - 1 + 1)) + 1;
+const randPage = Math.ceil(1000011 / randCount);
+
 const endpoints = {
-  allProducts: `${baseUrl}/products`,
-  products: `${baseUrl}/products?count=${Math.floor(Math.random() * (200 - 1 + 1)) + 1}&page=${Math.floor(Math.random() * (5001 - 1 + 1)) + 1}`,
-  productInfo: `${baseUrl}/products/${Math.floor(Math.random() * (1000011 - 1 + 1)) + 1}`,
-  productStyle: `${baseUrl}/products/${Math.floor(Math.random() * (1000011 - 1 + 1)) + 1}/styles`,
-  relatedProducts: `${baseUrl}/products/${Math.floor(Math.random() * (1000011 - 1 + 1)) + 1}/related`
+  products: `${baseUrl}/products`,
+  productsWithParams: `${baseUrl}/products?count=${randCount}}&page=${randPage}`,
+  productInfo: `${baseUrl}/products/${randId}`,
+  productStyle: `${baseUrl}/products/${randId}/styles`,
+  relatedProducts: `${baseUrl}/products/${randId}/related`
 }
 
 export default function () {
-  group('Show flow', function() {
-    let getAllProductsRes = http.get(endpoints.allProducts)
-    check(getAllProductsRes, { 'status was 200 (get all products)': (r) => r.status === 200 })
-    AllProductsTrend.add(getAllProductsRes.timings.duration)
-
-    sleep(SLEEP_DURATION)
-
-    let getProductsRes = http.get(endpoints.products)
-    check(getProductsRes, { 'status was 200 (get products based on page and count)': (r) => r.status === 200 })
-    ProductsTrend.add(getAllProductsRes.timings.duration)
-
-    sleep(SLEEP_DURATION)
-
-    let getProductInfoRes = http.get(endpoints.productInfo)
-    check(getProductInfoRes, { 'status was 200 (get product info)': (r) => r.status === 200 })
-    ProductInfoTrend.add(getProductInfoRes.timings.duration)
-
-
-    sleep(SLEEP_DURATION)
-
-    let getProductStyleRes = http.get(endpoints.productStyle)
-    check(getProductStyleRes, { 'status was 200 (get product styles)': (r) => r.status === 200 })
-    ProductStylesTrend.add(getProductStyleRes.timings.duration)
-
-    sleep(SLEEP_DURATION)
-
-    let getRelatedProductsRes = http.get(endpoints.relatedProducts)
-    check(getRelatedProductsRes, { 'status was 200 (get related products)': (r) => r.status === 200 })
-    RelatedProductsTrend.add(getRelatedProductsRes.timings.duration)
-
-    sleep(SLEEP_DURATION)
-
-  })
+  let res = http.get(endpoints.products)
+  check(res, { 'status was 200 (get products based on default page and count)': (r) => r.status === 200 })
+  sleep(SLEEP_DURATION);
 }
 
-
 // export default function () {
-//   let res = http.get(endpoints.allProducts)
-//   check(res, { 'status was 200': (r) => r.status === 200 })
-//   sleep(SLEEP_DURATION);
-// }
-
-// export default function () {
-//   let res = http.get(endpoints.products)
-//   check(res, { 'status was 200': (r) => r.status === 200 })
+//   console.log(endpoints.productsWithParams);
+//   let res = http.get(endpoints.productsWithParams)
+//   check(res, { 'status was 200 (get products based on page and count)': (r) => r.status === 200 })
 //   sleep(SLEEP_DURATION);
 // }
 
 // export default function () {
 //   let res = http.get(endpoints.productInfo)
-//   check(res, { 'status was 200': (r) => r.status === 200 })
+//   check(res, { 'status was 200 (get product info)': (r) => r.status === 200 })
 //   sleep(SLEEP_DURATION);
 // }
 
 // export default function () {
 //   let res = http.get(endpoints.productStyle)
-//   check(res, { 'status was 200': (r) => r.status === 200 })
+//   check(res, { 'status was 200 (get product styles)': (r) => r.status === 200 })
 //   sleep(SLEEP_DURATION);
 // }
 
 // export default function () {
 //   let res = http.get(endpoints.relatedProducts)
-//   check(res, { 'status was 200': (r) => r.status === 200 })
+//   check(res, { 'status was 200 (get related products)': (r) => r.status === 200 })
 //   sleep(SLEEP_DURATION);
 // }
 
