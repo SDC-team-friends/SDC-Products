@@ -2,6 +2,10 @@ import http from 'k6/http';
 import { sleep, check } from 'k6';
 
 export const options = {
+  thresholds: {
+    http_req_failed: ['rate < 0.01']
+  },
+
   scenarios: {
     reqPerSec_1: {
       executor: 'constant-arrival-rate',
