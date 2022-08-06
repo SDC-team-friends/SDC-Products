@@ -10,6 +10,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const productRoutes = require('./routes/products.js');
 app.use('/products', productRoutes);
+app.get(`/${process.env.LOADER_IO_TOKEN}`, (req, res) => { res.send(process.env.LOADER_IO_TOKEN)});
 
 app.listen(PORT);
 console.log(`Server listening at http://localhost:${PORT}`);
