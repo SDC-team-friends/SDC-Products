@@ -2,7 +2,7 @@
 
 ## Products-API
 
-Build the backend system for a product overview and related products service which supports an e-commerce web app, and optimize it to handle large quantities of data and traffic.
+The goal of the SDC project is to support the existing retail web application with a modernized system able to withstand web-scale traffic loads. We are a team of three engineers who inherited a legacy codebase, our strategy is to decompose existing API into constituent services. Each member took ownership of one API service. I was responsible for rebuilding the products API and constructing a database and server layer to support production-level traffic.
 
 ## Tech Choice
 
@@ -10,7 +10,8 @@ Build the backend system for a product overview and related products service whi
 ![ExpressJS](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=%2361DAFB)
 ![PostGres](https://img.shields.io/badge/PostGres-000000?style=for-the-badge&logo=postgresql&logoColor=blue)
 ![AWS](https://img.shields.io/badge/Amazon_AWS-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![NGINX](https://img.shields.io/badge/-NGINX-009900?logo=nginx&logoColor=white&style=for-the-badge)
+![Jest](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white)
 
 ## API Documentation
 
